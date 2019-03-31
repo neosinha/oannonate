@@ -3,6 +3,7 @@ Created on Mar 31, 2019
 
 @author: navendusinha
 '''
+# -*- coding: utf-8 -*-
 
 import cherrypy as OAServer
 # from pymongo import MongoClient
@@ -16,7 +17,7 @@ class OAServelet(object):
     '''
 
 
-    def __init__(self, www, dbaddress='127.0.0.1'):
+    def __init__(self, www):
         '''
         Constructor
         '''
@@ -24,7 +25,9 @@ class OAServelet(object):
         self.staticdir = os.path.join(os.getcwd(), 'ui_www')
         if www: 
             self.staticdir = www
-    
+        
+        print("Static directory: %s" % (self.staticdir))
+        
     
     @OAServer.expose
     def index(self):
@@ -94,7 +97,7 @@ if __name__ == '__main__':
     OAServer.quickstart(OAServelet(www=static_dir),
                                '/', conf)
     
-    pass
+
 
         
         

@@ -6,11 +6,7 @@
 var prompt = 'wbash# '; 
 
 function initApp() {
-	mqttInit();
-	clearTerm();
 	var dt = new Date(); 
-	appendTerm('Starting Webterminal '+dt.toLocaleString()+'\n');
-	appendTerm("Connected to Server ");
 	
 }
 
@@ -84,19 +80,4 @@ function sendCommand(cmd) {
 
 
 
-/*
-setInterval (function() {
-	 now = getEpoch(); 
-	 for (x in deviceState) {
-		 	devx = deviceState[x];
-		 	delta = now - devx['lastmsg'];
-		 ; 
-		 if (delta > 15000) {
-			 	devx['state'] = -2; 
-		 }
-		 updateDevicesUI();
-	 }	
-	}, 10000) ;
-
-*/
 
