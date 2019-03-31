@@ -21,13 +21,25 @@ class OAServelet(object):
         Constructor
         '''
         # write your class code here
+        self.staticdir = os.path.join(os.getcwd(), 'ui_www')
+        if www: 
+            self.staticdir = www
+    
+    
+    @OAServer.expose
+    def index(self):
+        """
+        Satisfies root file
+        """
+        return open(os.path.join(self.staticdir, "index.html"))
     
     
     def epoch(self):
         """
+        Returns Unix Epoch
         """
         epc = int(time.time()*1000)
-        return str(epc) 
+        return epc 
 
            
 

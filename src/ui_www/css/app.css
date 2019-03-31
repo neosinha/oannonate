@@ -1,0 +1,153 @@
+/*
+Custom APP CSS goes here
+*/
+
+
+
+@import url('https://fonts.googleapis.com/css?family=Inconsolata|Source+Code+Pro');
+
+i.icon.icon-sdomus {
+  width: 32px;
+  height:32px;
+  background-image: url("../img/smart-house-128.png");
+}
+
+i.icon.icon-offline {
+  width: 32px;
+  height:32px;
+  background-image: url("../img/cloud-off.png");
+}
+
+
+html {
+    height  : 100%;
+    overflow: hidden;
+}
+body {
+    height  : 100%;
+    overflow: auto;
+}
+
+.console {
+  width: 100%;
+  height: 240px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  resize: true;
+  font-family: 'Inconsolata', monospace;
+  font-size: 10;
+}
+	
+}
+
+.action {
+  background-color: #9ae3db;
+  color: #3a5552;
+}
+.reaction {
+  background-color: #eb808c;
+  color: #452529;
+}
+.info {
+  background-color: #7cbce9;
+  color: #293f4d;
+}
+.warning {
+  background-color: #f9a57c;
+  color: #533729;
+}
+.success {
+  background-color: #83cc83;
+  color: #2c442c;
+}
+.failure {
+  background-color: #e25b5b;
+  color: #2f1313;
+}
+.color1 {
+  background-color: #B5EBE5;
+  color: #445856;
+}
+.color1a {
+  background-color: #e1f7f7;
+  color: #5e6767;
+}
+.color1b {
+  background-color: #c5efcb;
+  color: #4a5a4c;
+}
+.color1c {
+  background-color: #63d5c8;
+  color: #214743;
+}
+.color2 {
+  background-color: #ebb5bb;
+  color: #4e3c3e;
+}
+.color2a {
+  background-color: #f3d3db;
+  color: #5b4f52;
+}
+.color2b {
+  background-color: #eab1e2;
+  color: #4e3b4b;
+}
+.color2c {
+  background-color: #e08b94;
+  color: #41282b;
+}
+.color3 {
+  background-color: #b5c8eb;
+  color: #444b58;
+}
+.color3a {
+  background-color: #d3e3f3;
+  color: #4f555b;
+}
+.color3b {
+  background-color: #75dace;
+  color: #2c524d;
+}
+.color3c {
+  background-color: #8ba9e0;
+  color: #283141;
+}
+.color4 {
+  background-color: #b5ebbd;
+  color: #445847;
+}
+.color4a {
+  background-color: #e1f7e7;
+  color: #545d57;
+}
+.color4b {
+  background-color: #d4eab1;
+  color: #4f5842;
+}
+.color4c {
+  background-color: #63d573;
+  color: #214726;
+}
+.gray-darker {
+  background-color: #646464;
+  color: #ffffff;
+}
+.gray-dark {
+  background-color: #7d7d7d;
+  color: #0a0a0a;
+}
+.gray {
+  background-color: #979797;
+  color: #262626;
+}
+.gray-light {
+  background-color: #b0b0b0;
+  color: #3b3b3b;
+}
+.gray-lighter {
+  background-color: #cacaca;
+  color: #4c4c4c;
+}

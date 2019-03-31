@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: view.app.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: view.app.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+//DeviceList: [{"mac":"292A1BA620A0","mqtt":["1503567469391"],"model":"SD10X4","config":{"states":["ON","OFF"],"current":"10","voltage":"240","dcount":"4","device":"RELAY","model":"SD10X4"},"serial":"1B2A29","mfgdate":1503567469391}]
+
+
+var AppView = function (auth) {
+	
+	
+	this.authHandler = auth; 
+	
+	/**
+	 * @method
+	 * @memberof AppView
+	 */
+	this.appInit = function() {
+		ui.clearView();
+		this.loginView();
+	}
+	
+	this.sdomusSwitch = function () {
+		
+	}
+
+	/**
+	 * @method
+	 * @memberof Appview
+	 */
+	this.loginView = function() {
+		f7engine.modalLogin("SmartDomus", 
+				"&lt;img src=\"img/smart-lock64.png\">", 
+				authProceed, 
+				authCancel );
+	}
+	
+	
+	/**
+	 * @method
+	 * @memberof Appview
+	 */
+	this.createAppView = function() {
+		rt = ui.f7icon('gear');
+		ui.navbarRight(rt); 
+		ui.navbar('', 'Smart Domus', rt);
+		btabs = Array(); 
+		
+		btabs.push({'icon': 'sdomus', 'label' : 'Favor'});
+		btabs.push({'f7icon': 'drawers', 'label' : 'Files'});
+		
+		ui.bottomToolbar({'tabFunc': 'view.presentTabView'}, btabs);
+		
+		this.sdomusLandingView();
+	}
+	
+
+	/**
+	 * DeviceList Handler
+	 * 
+	 * @method
+	 * @memberof AppView
+	 * 
+	 */
+	this.sdomusLandingView = function() {
+		buttons = this.loadDevices('color-gray');
+		cb = ui.contentBlock('contentblock1', buttons);
+		ui.appendToView(cb);
+		
+		//return cb; 
+	}
+	
+	/**
+	 * Load Devices
+	 * @method
+	 * @memberof AppView
+	 * 
+	 **/
+	this.loadDevices = function(state) {
+		
+		var cards = Array(); 
+		for (i in devices) {
+			var rdevice = devices[i];
+			var hdr = 'Relay'+i;
+			var rcount = parseInt(rdevice['config']['dcount']); 
+			console.log("Card ==>"+ JSON.stringify(rdevice));
+			var divx = ui.element('div', null);
+			
+			var buttons = Array();
+			var lElements = new Array();
+			
+			for (var x=0; x &lt; rcount; x++) {
+				id = 'button'+i+':'+x; 
+				device = getDeviceById(id);
+				console.log("Device ==>"+ JSON.stringify(device));
+				el = '&lt;div class="chip">&lt;div class="chip-label">'+device['name']+'&lt;/div>&lt;/div>';
+				
+				/*button = ui.createButton( {'inner' : el, 
+											'type': 'button button-fill '+state ,
+											'onclick' : 'changeDeviceState(\''+ device['id'] + '\');'} , 
+											 device['id']);*/
+				
+				
+				
+				lElements.push({'title' : 'Switch'+(x+1), 'media' : 'gear', 'after': 'OFFLINE'});
+				
+				
+				//divx.append(button)
+			}
+			var tblView = ui.listView('tableview2', {'blockname' : '', 'listFunction' : 'testFunc'}, 
+					lElements);
+			
+			//var card = ui.card('relaycard'+i, {'header' : 'Relay'+i, 'content' : divx, 'footer': ''} );
+			var card = ui.card('relaycard'+i, {'header' : 'Relay'+i, 'content' : tblView, 'footer': ''} );
+			cards.push(card);
+			
+		}
+		
+		
+		return cards; 
+	}
+	
+	
+	/**
+	 * @method
+	 * @memberof AppView
+	 */
+	this.offlineView = function() {
+		for (x in devices) {
+			devx = devices[x]; 
+			elx = docoument.getElementById('button'+x);
+			elx.setAttribute('class', 'button button-fill color-green');
+		}
+	}
+	
+	/**
+	 * @memberof AppView
+	 * @method
+	 * @param vNumber
+	 */
+	this.presentTabView = function(vNumber) {
+		for (el in document.getElementsByClassName('tab-link')) {
+			console.log("===>"+ el);
+			el.setAttribute('class', 'tab-link');
+			if (el.id == 'tabitem'+vNumber) {
+				el.setAttribute('class', 'tab-link active');
+			}
+		}
+		
+		if (vNumber == 0) {
+			this.sdomusLandingView();
+			
+		} else if (vNumber == 1) {
+			ui.clearView();
+		}
+	}
+	
+	
+	
+	
+	
+	
+}; </code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AuthHandler.html">AuthHandler</a></li><li><a href="deviceModel.html">deviceModel</a></li><li><a href="Framework7UI.html">Framework7UI</a></li><li><a href="Paho.MQTT.Client.html">Client</a></li><li><a href="Paho.MQTT.Message.html">Message</a></li><li><a href="SDomus.html">SDomus</a></li></ul><h3>Namespaces</h3><ul><li><a href="Paho.MQTT.html">MQTT</a></li></ul><h3>Global</h3><ul><li><a href="global.html#auth">auth</a></li><li><a href="global.html#authProceed">authProceed</a></li><li><a href="global.html#devicelist">devicelist</a></li><li><a href="global.html#getUserModel">getUserModel</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Mon Aug 28 2017 20:45:58 GMT-0700 (PDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
