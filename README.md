@@ -19,4 +19,4 @@ The goal of this project is to ease the pain for the following steps,
  ![Machine Learning Flow](https://github.com/neosinha/oannonate/blob/master/docs/ml-flow.png)
 
  Here is how Open Annotations would help. 
- ![Open Annotation Toolset Flow] (https://github.com/neosinha/oannonate/blob/master/docs/oa-flow.png)
+ ![Open Annotation Toolset Flow](https://github.com/neosinha/oannonate/blob/master/docs/oa-flow.png)
