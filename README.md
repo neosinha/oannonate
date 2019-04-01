@@ -15,7 +15,8 @@ The goal of this project is to ease the pain for the following steps,
    * images
    * annotations
  
- The dataset would be ready for training immediately. 
+ The dataset would be ready for training immediately. Here is an example of the Machine Learning flow. 
  ![Machine Learning Flow](https://github.com/neosinha/oannonate/blob/master/docs/ml-flow.png)
 
-
+ Here is how Open Annotations would help. 
+ ![Open Annotation Toolset Flow] (https://github.com/neosinha/oannonate/blob/master/docs/oa-flow.png)
