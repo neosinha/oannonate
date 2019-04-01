@@ -17,6 +17,6 @@ The goal of this project is to ease the pain for the following steps,
  
  The dataset would be ready for training immediately. 
  
- [picture alt](http://www.brightlightpictures.com/assets/images/portfolio/thethaw_header.jpg "Title is optional")
+ [picture](http://www.brightlightpictures.com/assets/images/portfolio/thethaw_header.jpg "Title is optional")
 
 
