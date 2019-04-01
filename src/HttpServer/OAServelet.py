@@ -7,8 +7,14 @@ Created on Mar 31, 2019
 
 import cherrypy as OAServer
 # from pymongo import MongoClient
+import logging
+import argparse, time, os, sys
 
-import argparse, time, os
+
+# Initalize logging module
+logging.basicConfig(filename='annonserver.log',level=logging.DEBUG, format='%(asctime)s %(message)s')
+handler = logging.StreamHandler(sys.stdout)
+logging.getLogger().addHandler(handler)
 
 
 class OAServelet(object):
@@ -26,7 +32,9 @@ class OAServelet(object):
         if www: 
             self.staticdir = www
         
-        print("Static directory: %s" % (self.staticdir))
+        self.uploaddir = os.path.join(os.getcwd(), 'uploads')
+        
+        logging.info("Static directory: %s" % (self.staticdir))
         
     
     @OAServer.expose
@@ -36,6 +44,20 @@ class OAServelet(object):
         """
         return open(os.path.join(self.staticdir, "index.html"))
     
+    
+    @OAServer.expose
+    def fileupload(self, file):
+        """
+        Handles Fileupload
+        """
+        logging.info("Found filename: %s" % (file.filename))
+        ofile = os.path.join(self.uploadir, file.filename)
+        if not (os.path.exists(self.uploadir)):
+            os.makedirs(self.uploadir)
+        
+        logging.info("Local template filename: %s" % (ofile))
+   
+   
     
     def epoch(self):
         """
@@ -48,6 +70,9 @@ class OAServelet(object):
 
 # main code section   
 if __name__ == '__main__':
+    
+
+    
     port = 9005
     www = os.path.join(os.getcwd(), 'www')
     ipaddr = '127.0.0.1'
@@ -85,7 +110,8 @@ if __name__ == '__main__':
     
     # static_dir = os.path.join(os.getcwd(), '..' ,'www')
     static_dir = staticwww
-    print("Static dir: %s " % (static_dir))
+    
+    logging.info("Static dir: %s " % (static_dir))
     conf = {
         '/': {
             'tools.sessions.on': True,
