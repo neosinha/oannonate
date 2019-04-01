@@ -16,7 +16,6 @@ The goal of this project is to ease the pain for the following steps,
    * annotations
  
  The dataset would be ready for training immediately. 
- 
- [picture](https://github.com/neosinha/oannonate/blob/master/docs/ml-flow.png "Machine Learning Flow")
+ ![Machine Learning Flow](https://github.com/neosinha/oannonate/blob/master/docs/ml-flow.png)
 
 
