@@ -1,2 +1,0 @@
-
-importScripts('compress-worker.js');

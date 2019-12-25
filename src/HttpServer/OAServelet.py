@@ -5,10 +5,11 @@ Created on Mar 31, 2019
 '''
 # -*- coding: utf-8 -*-
 
-import cherrypy as OAServer
-# from pymongo import MongoClient
+import cherrypy as HttpServer
+from pymongo import MongoClient
 import logging
-import argparse, time, os, sys
+import json
+import argparse,time, os, sys, shutil
 
 
 # Initalize logging module
@@ -36,8 +37,7 @@ class OAServelet(object):
         
         logging.info("Static directory: %s" % (self.staticdir))
         
-    
-    @OAServer.expose
+    @HttpServer.expose
     def index(self):
         """
         Satisfies root file
@@ -45,18 +45,43 @@ class OAServelet(object):
         return open(os.path.join(self.staticdir, "index.html"))
     
     
-    @OAServer.expose
-    def fileupload(self, file):
+    @HttpServer.expose
+    def imgupload(self, file):
         """
-        Handles Fileupload
+        Handles image upload
+        :return:
         """
-        logging.info("Found filename: %s" % (file.filename))
-        ofile = os.path.join(self.uploadir, file.filename)
-        if not (os.path.exists(self.uploadir)):
-            os.makedirs(self.uploadir)
-        
-        logging.info("Local template filename: %s" % (ofile))
-   
+        uptstamp = self.epoch()
+        upfile = file
+        self.uploaddir = os.path.join(self.staticdir, 'uploads')
+        print("UploadFile: Name: %s, Type: %s " % (upfile.filename, upfile.content_type))
+        fext = str(upfile.content_type).split('/')[1]
+        print("Extension: %s" % (fext))
+
+        if not os.path.exists(self.uploaddir):
+            logging.info('Upload directory does not exist, creating %s' % (self.uploaddir))
+            os.makedirs(self.uploaddir)
+
+        if upfile is not None:
+            tsx = self.epoch()
+            ofile = os.path.join(self.uploaddir, "%s.%s" % (tsx, fext))
+            print("Local filename: %s" % (ofile))
+            ofilex = open(ofile, "wb")
+            shutil.copyfileobj(upfile.file, ofilex)
+            logging.info("Copied uploaded file as %s" % (ofilex))
+            ofilex.close()
+            enstamp = self.epoch()
+            wwwbase = os.path.basename(self.staticdir)
+
+
+            out = {"start": uptstamp,
+                   'upimg': "%s.%s" % (tsx, fext),
+                   'end' : enstamp}
+
+            return json.dumps(out)
+        else:
+            return "Parameter: \"theFile\" was not defined"
+
    
     
     def epoch(self):
@@ -71,44 +96,46 @@ class OAServelet(object):
 # main code section   
 if __name__ == '__main__':
     
-
-    
-    port = 9005
-    www = os.path.join(os.getcwd(), 'www')
-    ipaddr = '127.0.0.1'
+    portnum = 9005
+    www = os.path.join(os.getcwd(), '..', 'ui_www')
+    ipadd = '127.0.0.1'
     dbip = '127.0.0.1'
     
     ap = argparse.ArgumentParser()  
-    ap.add_argument("-p", "--port", required=False,
-                help="Port number to start HTTPServer." )
+    ap.add_argument("-p", "--port", required=False, default=portnum,
+                help="Port number to start HTTPServer, defaults to {}".format(portnum))
 
-    ap.add_argument("-i", "--ipaddress", required=False,
-                help="IP Address to start HTTPServer")
+    ap.add_argument("-i", "--ipaddress", required=False, default=ipadd,
+                help="IP Address to start HTTPServer, defaults to {}".format(ipadd))
 
-    ap.add_argument("-d", "--mongo", required=False,
-                help="IP Address for MongoDB server")
+    ap.add_argument("-d", "--mongo", required=False, default=dbip,
+                help="IP Address for MongoDB server, defaults to {}".format(dbip))
     
-    ap.add_argument("-s", "--static", required=False,
-                help="Static directory where WWW files are present")
+    ap.add_argument("-s", "--static", required=False, default=www,
+                help="Static directory where WWW files are present, {}".format(www))
 
     args = vars(ap.parse_args())
-    
-    portnum = int(args["port"])
-    ipadd = args["ipaddress"]
-    dbadd = args["mongo"]
-    staticwww = os.path.abspath(args['static'])
+
+    if args['port']:
+        portnum = int(args["port"])
+
+    if args['ipaddress']:
+        ipadd = args["ipaddress"]
+
+    if args['mongo']:
+        dbadd = args["mongo"]
+
+    if args['static']:
+        staticwww = os.path.abspath(args['static'])
     
     
 
-    OAServer.config.update({ 'server.socket_host' : ipadd,
+    HttpServer.config.update({'server.socket_host' : ipadd,
                           'server.socket_port': portnum, 
                           'server.socket_timeout': 60,
                           'server.thread_pool' : 8, 
-                          'server.max_request_body_size': 0 
+                          'server.max_request_body_size': 0
                           })
-    
-    
-    # static_dir = os.path.join(os.getcwd(), '..' ,'www')
     static_dir = staticwww
     
     logging.info("Static dir: %s " % (static_dir))
@@ -120,13 +147,6 @@ if __name__ == '__main__':
         }
     }
     
-    OAServer.quickstart(OAServelet(www=static_dir),
+    HttpServer.quickstart(OAServelet(www=static_dir),
                                '/', conf)
-    
 
-
-        
-        
-
-        
-     
