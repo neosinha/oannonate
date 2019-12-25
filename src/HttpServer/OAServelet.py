@@ -76,7 +76,7 @@ class OAServelet(object):
 
             out = {"start": uptstamp,
                    'upimg': "%s.%s" % (tsx, fext),
-                   'end' : enstamp}
+                   'end': enstamp}
 
             return json.dumps(out)
         else:
