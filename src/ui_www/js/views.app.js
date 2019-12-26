@@ -5,11 +5,13 @@ ui = new Bootstrap();
 function appNavBar() {
 	//navbar = ui.navbar("navarea", '<img align="middle" class="logo-img" src="img/logo-header-psi.png"></img>');
 	navbar = ui.navbar("navarea", '<span class="brand">'+
-								   '<span class="brandtext">PixelateMe</span>'+
-								   '</span>' + 
-								   '<span class="clock" id="clock"></span>'
+	                                    '<img class=\'mainlogo\' src=\'img/oannon-64.png\'></img>' +
+								        '<span class="brandtext">OAnnotate</span>'+
+								   '</span>'
 								   );
-	ui.addSubViewToMain([navbar]);
+    mainbody = document.getElementById('navbararea');
+	//ui.addSubViewToMain([navbar]);
+	mainbody.appendChild(navbar);
 }
 
 

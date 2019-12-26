@@ -35,16 +35,15 @@ function loadLandingView() {
 		var h1x = ui.h3(null, '', [{'name' : 'class', 'value' : 'mainlogo text-center' }]);
 		var jum = ui.jumbotron('view1', h1x,' bg-basic'); 
 		
-        var crow = ui.addRowCol('imagerow', 3);
-        var brow = ui.addRowCol('buttonrow', 3);
-
+        var brow = ui.addRowCol('buttonrow', 2);
+        var crow = ui.addRowCol('imagerow', 2);
 
 		var resultarea = ui.createElement('div', 'results');
 		var notifyarea = ui.createElement('div', 'notify');
 		
 
-        jum.appendChild(crow);
         jum.appendChild(brow);
+        jum.appendChild(crow);
 		jum.appendChild(resultarea);
 		
 		//jum.appendChild(xmlarea);
@@ -127,8 +126,6 @@ function addButtonCol() {
     fl.setAttribute('class', 'upload');
     fl.setAttribute('name', 'upfile');
 
-    //upbtn.setAttribute('onclick', 'uploadTrigger();');
-    //upbtn.innerText = 'Upload Image';
     upbtn.appendChild(fl);
 
     var icon = ui.createElement('span', 'uploadicon');
@@ -144,7 +141,9 @@ function addButtonCol() {
     var flupld = ui.createElement('div', 'uploadiv');
     flupld.setAttribute('class', 'fileUpload btn btn-danger btn-block');
     var spanx = ui.createElement('span');
-    spanx.innerHTML = 'Upload Image     ';
+    spanx.innerHTML = 'Upload ZIP/TARGZ  ';
+
+
     flupld.appendChild(spanx);
     flupld.appendChild(icon);
 
@@ -155,29 +154,23 @@ function addButtonCol() {
     fl.setAttribute('onchange' , 'readFile(this);');
     flupld.appendChild(fl);
 
+    var img = ui.createElement('img', 'inst');
+    img.setAttribute('src', 'img/onnotate-flow.png');
+    img.setAttribute('class', 'flow');
+    formx.appendChild(img);
+
     formx.appendChild(flupld);
     formx.appendChild(ui.br());
 
     btn.appendChild(formx);
 
+    var txtarea = ui.createElement('textarea', 'classlist');
+    txtarea.setAttribute('class', 'classlist');
+    var col2 = document.getElementById('buttonrow-col1');
+    col2.appendChild(txtarea);
 
-
-    //Add Second button which is a 'Download Button'
-    var dnbtn = ui.createElement('a', 'dwnload');
-    dnbtn.setAttribute('class', 'fileUpload btn btn-block btn-info');
-    dnbtn.disabled = true;
-
-    var spanx = ui.createElement('span');
-    spanx.innerHTML = 'Download  ';
-    dnbtn.appendChild(spanx);
-
-    var icon = ui.createElement('span', 'dnloadicon');
-    icon.setAttribute('class', 'glyphicon  glyphicon-save');
-    dnbtn.appendChild(icon);
-
-    var btn = document.getElementById('buttonrow-col1');
-    btn.appendChild(dnbtn);
-
+    //var imcol = document.getElementById('buttonrow-col0');
+    //imcol.appendChild(img);
 }
 
 function readFile(input) {
@@ -291,6 +284,7 @@ function addImageCol() {
   var pxlimg = ui.createElement('img', 'pxlimage');
   pxlimg.setAttribute('src', 'img/example/abba-1-pxltd.JPG');
   pxlimg.setAttribute('class', 'imcenter');
+
   var col1 = document.getElementById('imagerow-col1');
   var attr = col1.getAttribute('class');
   //col1.setAttribute('class', attr + ' well');

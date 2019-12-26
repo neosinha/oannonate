@@ -26,8 +26,8 @@
 }
 
 .brandtext {
-	font-family: 'Monoton';
-	font-size: 32px;
+	font-family: 'Source Sans Pro';
+	font-size: 64px;
 	color: #000;
 	text-align: center;
 	position: relative;
@@ -48,7 +48,7 @@
 }
 
 .navbar {
-	margin-top: 16px;
+	margin-top: 1%;
 	margin-bottom: 10px;
 	background-color : #3F0098;
 	background-color : #EEE;
@@ -73,7 +73,7 @@
 	font-family: 'Major Mono Display', 'cursive';
 	font-size: 48px; 
 	position: relative; 
-	top: -10%;
+	top: -15%;
 }
 
 .maintab {
@@ -100,6 +100,19 @@
 .imcenter {
 	display : block;
 	top: 50%;
+	margin-left: auto;
+	margin-top: auto;
+    margin-right: auto;
+    margin-bottom: auto;
+
+    width: 50%;
+	max-width: 480px;
+    max-height: 480px;
+
+}
+.flow {
+	display : block;
+	top: 50%;
 	/*position: relative;*/
     /*left : 5%;
     right: 5%;
@@ -110,9 +123,14 @@
     margin-bottom: auto;
 
     width: 50%;
-	max-width: 480px;
-    max-height: 480px;
+	max-width: 80%;
+    max-height: 80%;
 
+}
+
+.classlist {
+    position: relative;
+    width: 80%;
 }
 
 .imageblur {
