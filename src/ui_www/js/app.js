@@ -35,8 +35,8 @@ function loadLandingView() {
 		var h1x = ui.h3(null, '', [{'name' : 'class', 'value' : 'mainlogo text-center' }]);
 		var jum = ui.jumbotron('view1', h1x,' bg-basic'); 
 		
-        var crow = ui.addRowCol('imagerow', 2);
-        var brow = ui.addRowCol('buttonrow', 2);
+        var crow = ui.addRowCol('imagerow', 3);
+        var brow = ui.addRowCol('buttonrow', 3);
 
 
 		var resultarea = ui.createElement('div', 'results');
@@ -229,8 +229,6 @@ function uploadTrigger() {
         });
 }
 
-function loadingView() {
-}
 
 function updateImages(msg) {
     var resp = JSON.parse(msg);
@@ -266,6 +264,7 @@ function progressModal() {
 
     //mcnt.appendChild(img);
 }
+
 function addNotification(alertType, msg) {
     removeNotification();
     var msg = ui.createNotification(alertType, msg);
@@ -284,7 +283,7 @@ function addImageCol() {
   rawimg.setAttribute('class', 'imcenter');
   var col0 = document.getElementById('imagerow-col0');
   var attr = col0.getAttribute('class');
-  col0.setAttribute('class', attr + ' well');
+  //col0.setAttribute('class', attr + ' well');
   col0.appendChild(rawimg);
   col0.appendChild(ui.hr());
 
@@ -294,7 +293,7 @@ function addImageCol() {
   pxlimg.setAttribute('class', 'imcenter');
   var col1 = document.getElementById('imagerow-col1');
   var attr = col1.getAttribute('class');
-  col1.setAttribute('class', attr + ' well');
+  //col1.setAttribute('class', attr + ' well');
   col1.appendChild(pxlimg);
   col1.appendChild(ui.hr());
 
