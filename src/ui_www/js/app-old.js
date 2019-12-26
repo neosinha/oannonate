@@ -7,9 +7,10 @@ console.log("Location: "+ server);
 function appInit() {
 	appNavBar();
 	loadLandingView(); 
-
-	//addImageCol();
-	//addButtonCol();
+	//updatePerSecond();
+	//fileUploadRow();
+	addImageCol();
+	addButtonCol();
 	//initUpload();
 }
 
@@ -35,13 +36,14 @@ function loadLandingView() {
 		var jum = ui.jumbotron('view1', h1x,' bg-basic'); 
 		
         var brow = ui.addRowCol('buttonrow', 1);
+        var crow = ui.addRowCol('imagerow', 1);
 
 		var resultarea = ui.createElement('div', 'results');
 		var notifyarea = ui.createElement('div', 'notify');
 		
 
-        //jum.appendChild(brow);
-       // jum.appendChild(crow);
+        jum.appendChild(brow);
+        jum.appendChild(crow);
 		jum.appendChild(resultarea);
 		
 		//jum.appendChild(xmlarea);
