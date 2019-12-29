@@ -230,20 +230,6 @@ function updateImages(msg) {
     ajaxLoad(pixelateCallBack, urlx);
 }
 
-function pixelateCallBack(resp) {
-    console.log(resp);
-    var rsp = JSON.parse(resp);
-    var outfile = rsp['outfile'];
-    addNotification('success', 'Pixlated '+ rsp['faces'].length + ' faces.');
-    var pxlimg = document.getElementById('pxlimage');
-    pxlimg.setAttribute('src', 'pxltd/'+rsp['outfile']);
-    pxlimage.setAttribute('class', 'imcenter');
-
-    var btnx = document.getElementById('dwnload');
-    btnx.disabled = false;
-    btnx.setAttribute('onclick', 'window.open(\'http://'+server+'/pxltd/'+rsp['outfile']+'\');');
-    btnx.setAttribute('download', rsp['outfile']);
-}
 
 function progressModal() {
 
@@ -252,8 +238,6 @@ function progressModal() {
     var img = ui.createElement('img', 'pcontent');
     img.setAttribute('src', 'img/file_uploading.gif');
     img.setAttribute('class', 'imcenter');
-
-    //mcnt.appendChild(img);
 }
 
 function addNotification(alertType, msg) {
@@ -293,8 +277,6 @@ function addImageCol() {
 
 
 
-
-
 var systemModel = null; 
 var networkObj = null; 
 
@@ -302,9 +284,7 @@ function getsystem_callback(respx) {
 	console.log(respx);
 	systemModel = JSON.parse(respx); 
 	networkObj = systemModel['network'];
-	
 	drawView();
-	
 }
 
 

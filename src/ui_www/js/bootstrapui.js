@@ -318,7 +318,7 @@ var Bootstrap  = function () {
 	
 	this.navbar = function(id, banner) {
 		nav = this.createElement('nav', null);
-		nav.setAttribute('class', 'navbar navbar-default');
+		nav.setAttribute('class', 'navbar navbar-default navbar-static-top');
 			cont = this.createElement('div', null);
 			cont.setAttribute('class', 'container');
 			
