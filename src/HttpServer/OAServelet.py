@@ -146,7 +146,7 @@ if __name__ == '__main__':
             'tools.staticdir.dir': static_dir
         }
     }
-    
-    HttpServer.quickstart(OAServelet(www=static_dir),
+
+    HttpServer.quickstart(OAServelet(www=static_dir, dbaddress='23.236.252.10'),
                                '/', conf)
 

@@ -36,6 +36,13 @@ function loadLandingView() {
 		
         var brow = ui.addRowCol('buttonrow', 1);
 
+          //create tab area
+		var tabs = new Array();
+		tabs.push({'name' : "Datasets" , 'content' : loadDatasets()});
+		tabs.push({'name' : "Upload" ,'content' : uploadDatasets()});
+		navtabs= ui.navtabs('tabbed', 'justified bg-basic text-warning', tabs);
+
+
 		var resultarea = ui.createElement('div', 'results');
 		var notifyarea = ui.createElement('div', 'notify');
 		
@@ -47,14 +54,28 @@ function loadLandingView() {
 		//jum.appendChild(xmlarea);
 		jum.appendChild(notifyarea);
 		
+		ui.addSubViewToMain([navtabs]);
 		ui.addSubViewToMain([jum]);
-		
+
 		$('#modalheader').html(''); 
 		$('#modalbody').html('uuuu'); 
 		$('#modalfooter').html(''); 
 		
 }
 
+function uploadDatasets() {
+    var divx = ui.createElement('div', 'uploaddataset');
+
+    divx.appendChild( addButtonCol() );
+
+    return divx;
+}
+
+function loadDatasets() {
+    var divx = ui.createElement('div', 'datasetload');
+
+    return divx;
+}
 
 function fileUploadRow() {
 
@@ -102,12 +123,12 @@ function fileUploadRow() {
   spanx.appendChild(prvinpt);
 
 
-  //return inpgrp;
+  return inpgrp;
 
-   var btn = document.getElementById('buttonrow-col0');
+   /*var btn = document.getElementById('buttonrow-col0');
    btn.innerHTML = '';
    btn.appendChild(inpgrp);
-
+    */
 }
 
 function addButtonCol() {
@@ -159,16 +180,18 @@ function addButtonCol() {
     formx.appendChild(flupld);
     formx.appendChild(ui.br());
 
-    btn.appendChild(img);
-    btn.appendChild(formx);
+    //btn.appendChild(img);
+    //btn.appendChild(formx);
 
-    var txtarea = ui.createElement('textarea', 'classlist');
+    /*var txtarea = ui.createElement('textarea', 'classlist');
     txtarea.setAttribute('class', 'classlist');
     var col2 = document.getElementById('buttonrow-col0');
-    col2.appendChild(txtarea);
+    col2.appendChild(txtarea);*/
 
     //var imcol = document.getElementById('buttonrow-col0');
     //imcol.appendChild(img);
+
+    return formx;
 }
 
 function readFile(input) {
