@@ -23,8 +23,7 @@ class OAServelet(object):
     classdocs
     '''
 
-
-    def __init__(self, www):
+    def __init__(self, www=None, dbaddress=None):
         '''
         Constructor
         '''
