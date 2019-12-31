@@ -3,7 +3,7 @@ var serverLocation = location.host;
 var server = "http://" + serverLocation ;
 console.log("Location: "+ server); 
 
-
+//This is the app Init function
 function appInit() {
 	appNavBar();
 	loadLandingView(); 
