@@ -2,15 +2,24 @@
 var serverLocation = location.host; 
 var server = "http://" + serverLocation ;
 console.log("Location: "+ server); 
+var appglobals = {'classlist': null};
 
 //This is the app Init function
 function appInit() {
 	appNavBar();
 	loadLandingView(); 
-
+    createDataSetStructure();
+    loadInitials();
 	//addImageCol();
 	//addButtonCol();
 	//initUpload();
+}
+
+function loadInitials() {
+    var urlx = 'http://' + server + '/getimageclasses';
+	console.log('Sys: '+ urlx);
+	appglobals['classlist'] = null;
+    ajaxLoad(imageClassCallBack, urlx);
 }
 
 var serialnum = null; 
@@ -38,8 +47,8 @@ function loadLandingView() {
 
           //create tab area
 		var tabs = new Array();
-		tabs.push({'name' : "Datasets" , 'content' : loadDatasets()});
-		tabs.push({'name' : "Upload" ,'content' : uploadDatasets()});
+		tabs.push({'name' : "Datasets" , 'content' : loadDatasets() });
+		tabs.push({'name' : "Upload" ,'content' : uploadDatasets() });
 		navtabs= ui.navtabs('tabbed', 'justified bg-basic text-warning', tabs);
 
 
@@ -63,22 +72,42 @@ function loadLandingView() {
 		
 }
 
+/**
+Creates Update Structure scaffolding
+**/
 function uploadDatasets() {
     var divx = ui.createElement('div', 'uploaddataset');
-
-    divx.appendChild( addButtonCol() );
+    //make 2 columns
+    var upcols =  ui.addRowCol('buttonrow', 2);
+    divx.appendChild(upcols);
 
     return divx;
 }
 
+
+//function to populate the scaffolding in Data Structure
+function createDataSetStructure() {
+    var divx = document.getElementById('buttonrow-col1');
+    var img = ui.createElement('img', 'oimg1');
+    img.setAttribute('class', 'col-img');
+    img.setAttribute('src', 'img/folder.png');
+    divx.appendChild(img);
+    divx.appendChild(addButtonCol());
+
+
+}
+
 function loadDatasets() {
     var divx = ui.createElement('div', 'datasetload');
+    var row1 = ui.addRowCol('datasetrow', 2);
+    divx.appendChild(row1);
+
+
 
     return divx;
 }
 
 function fileUploadRow() {
-
 
   var inpgrp = ui.createElement('div', 'fileupload');
   inpgrp.setAttribute('class', 'input-group image-preview');
@@ -116,7 +145,8 @@ function fileUploadRow() {
 
   var inpt = ui.createElement('input', 'uploadimg');
   inpt.setAttribute('type', 'file');
-  inpt.setAttribute('accept', 'image/png, image/jpeg, image/gif');
+  inpt.setAttribute('accept', 'image/png, image/jpeg');
+  inpt.setAttribute('accept', '.zip, .gz, .tar.gz');
   inpt.setAttribute('name', 'input-file-preview');
   prvinpt.appendChild(inpt);
 
@@ -225,7 +255,7 @@ function uploadTrigger() {
     for (idx=0; idx < files.length; idx++) {
         console.log('==> '+ files[idx].name);
     }
-        $.ajax({
+    $.ajax({
             url: '/imgupload',
             type: 'post',
             data: fd,
@@ -240,17 +270,37 @@ function uploadTrigger() {
                     alert('file not uploaded');
                 }
             },
-        });
+      });
 }
 
 
 function updateImages(msg) {
     var resp = JSON.parse(msg);
     removeNotification();
-    addNotification('warning', 'Pixelating... please wait');
-    var urlx = 'http://' + server + '/pixelatefaces?ifile='+resp['upimg'];
+    /*var urlx = 'http://' + server + '/getimageclasses';
 	console.log('Sys: '+ urlx);
-    ajaxLoad(pixelateCallBack, urlx);
+    ajaxLoad(imageClassCallBack, urlx);
+    */
+    location.reload();
+}
+
+function imageClassCallBack(response) {
+    console.log(response);
+    appglobals['classlist'] = JSON.parse(response);
+    var tbldata = new Array();
+    for (i=0; i < appglobals['classlist'].length; i++) {
+        var clsnx = appglobals['classlist'][i];
+        console.log("Class: "+ JSON.stringify(clsnx)) ;
+        tbldata.push([clsnx['name'], clsnx['count'], 'A total of '+clsnx['count']+ 'images(s) belonging to class '+ clsnx['name']+ '. These were downloaded from Google.']);
+    }
+
+    var hdr = ['Class Name', 'Count', 'Description'];
+    var tbl = ui.table('classtable', 'striped', hdr, tbldata);
+    var tblel = document.getElementById('datasetload');
+    tblel.innerHTML = '';
+    tblel.appendChild(tbl);
+
+
 }
 
 

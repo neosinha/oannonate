@@ -62,6 +62,19 @@
 	/*background-color : #3F0098;*/
 }
 
+.col-img {
+   display : block;
+	top: 50%;
+	margin-left: auto;
+	margin-top: auto;
+    margin-right: auto;
+    margin-bottom: auto;
+
+    width: 50%;
+	max-width: 240px;
+    max-height: 240px;
+}
+
 .cable {
 	position: relative; 
 	background-color : #3F0098;

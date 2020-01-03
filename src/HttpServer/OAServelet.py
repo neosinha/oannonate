@@ -8,9 +8,10 @@ Created on Mar 31, 2019
 import cherrypy as HttpServer
 from pymongo import MongoClient
 import logging
-import json
-import argparse,time, os, sys, shutil
-
+import json, magic
+from zipfile import ZipFile
+import argparse, datetime, time, os, sys, shutil
+import threading
 
 # Initalize logging module
 logging.basicConfig(filename='annonserver.log',level=logging.DEBUG, format='%(asctime)s %(message)s')
@@ -23,35 +24,42 @@ class OAServelet(object):
     classdocs
     '''
 
-    def __init__(self, www=None, dbaddress=None):
+    def __init__(self, www=None, dbhost=None):
         '''
         Constructor
         '''
-        # write your class code here
+
+        # Handle Static Directory Defintion
         self.staticdir = os.path.join(os.getcwd(), 'ui_www')
         if www: 
             self.staticdir = www
-        
         self.uploaddir = os.path.join(os.getcwd(), 'uploads')
-        
         logging.info("Static directory: %s" % (self.staticdir))
-        
+
+        # Handle MongoDB Client defintions
+        self.dbhost = '127.0.0.1'
+        if not dbhost is None:
+            self.dbhost = dbhost
+
+        client = MongoClient(self.dbhost, 27017)
+        self.db = client['oannontate']
+        self.pics = self.db['imagerepo']
+
+
     @HttpServer.expose
     def index(self):
         """
-        Satisfies root file
+        Route file route
         """
         return open(os.path.join(self.staticdir, "index.html"))
     
-    
     @HttpServer.expose
-    def imgupload(self, file):
+    def imgupload(self, upfile):
         """
         Handles image upload
         :return:
         """
         uptstamp = self.epoch()
-        upfile = file
         self.uploaddir = os.path.join(self.staticdir, 'uploads')
         print("UploadFile: Name: %s, Type: %s " % (upfile.filename, upfile.content_type))
         fext = str(upfile.content_type).split('/')[1]
@@ -67,11 +75,10 @@ class OAServelet(object):
             print("Local filename: %s" % (ofile))
             ofilex = open(ofile, "wb")
             shutil.copyfileobj(upfile.file, ofilex)
-            logging.info("Copied uploaded file as %s" % (ofilex))
+            logging.info("Copied uploaded file as %s" % (ofile))
             ofilex.close()
             enstamp = self.epoch()
-            wwwbase = os.path.basename(self.staticdir)
-
+            self.unpack(localfile=ofile)
 
             out = {"start": uptstamp,
                    'upimg': "%s.%s" % (tsx, fext),
@@ -81,16 +88,81 @@ class OAServelet(object):
         else:
             return "Parameter: \"theFile\" was not defined"
 
-   
-    
+    def unpack(self, localfile=None):
+        """
+        Check and UNZP files
+        :return:
+        """
+        if localfile:
+            print("Unpacking LocalFile: {}".format(localfile))
+            ftype = magic.from_file(localfile, mime=True)
+            print("%s " % (ftype))
+
+            # Uncompress in the storage location
+            # TODO: Limit the directory size by nuber of files so that
+            ddmmyy = str(datetime.datetime.utcnow()).split(" ")[0]
+            print("Date: {}".format(ddmmyy))
+            ucompressLocation = os.path.join(self.staticdir, 'imagerepo', ddmmyy)
+            if not os.path.exists(ucompressLocation):
+                os.makedirs(ucompressLocation)
+
+            if 'gzip' in str(ftype):
+                print("GZIP Type: {}".format(ftype))
+            elif 'zip' in str(ftype):
+                print('ZIP file type: {}'.format(ftype))
+                with ZipFile(localfile, 'r') as zipobj:
+                    zipobj.extractall(path=ucompressLocation)
+                    classname = ''
+                    for infoitem in zipobj.infolist():
+                        # print("\t%s, %s" % (infoitem.filename, infoitem.compress_type))
+                        print("\t%s" % (infoitem))
+                        print("\t=== %s" % (infoitem.compress_type))
+                        if infoitem.compress_type == 0:
+                            print("ClassName: %s" % (infoitem.filename))
+                            classnamex = infoitem.filename.split('/')
+                            classname = classnamex[0]
+
+                        if not '__MACOSX' in infoitem.filename and infoitem.compress_type != 0:
+                            print("\t%s" % (infoitem))
+                            print(infoitem.filename)
+
+                            fobj = {'filename': os.path.join('imagerepo', ddmmyy, infoitem.filename),
+                                    'class': classname,
+                                    'size': infoitem.file_size,
+                                    'md5': '',
+                                    'date': ddmmyy
+                                    }
+                            print("FileObj: {}".format(fobj))
+                            res = self.pics.update(fobj, fobj, upsert=True)
+                            print('DBInsert: %s' % (res))
+
+    @HttpServer.expose
+    def getimageclasses(self):
+        """
+        Returns list of image classes
+        :return:
+        """
+        classes = list()
+        dclasses = self.pics.distinct('class')
+        for classx in dclasses:
+            print(classx)
+            dbquery = self.pics.find({'class': classx}, {'_id': 0})
+            classes.append({'name': classx,
+                            'count': dbquery.count()})
+        return json.dumps(classes)
+
+
+
     def epoch(self):
         """
         Returns Unix Epoch
         """
-        epc = int(time.time()*1000)
-        return epc 
+        epc = int(time.time() * 1000)
+        return epc
 
-           
+
+
+
 
 # main code section   
 if __name__ == '__main__':
@@ -146,6 +218,6 @@ if __name__ == '__main__':
         }
     }
 
-    HttpServer.quickstart(OAServelet(www=static_dir, dbaddress='23.236.252.10'),
+    HttpServer.quickstart(OAServelet(www=static_dir, dbhost='23.236.252.10'),
                                '/', conf)
 
