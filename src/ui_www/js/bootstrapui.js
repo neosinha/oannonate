@@ -230,7 +230,12 @@ var Bootstrap  = function () {
 			for (ridx= 0; ridx < rdata.length; ridx++) {
 				var td = document.createElement('td');
 				td.setAttribute('class', 'text-left');
-				td.innerHTML = rdata[ridx];
+				//console.log("TypeOf: "+ typeof rdata[ridx]);
+				if (typeof rdata[ridx]  == 'object') {
+				    td.appendChild(rdata[ridx]);
+				} else {
+				    td.innerHTML = rdata[ridx];
+				}
 				tr.appendChild(td);
 			}
 			tbody.appendChild(tr);
@@ -301,8 +306,7 @@ var Bootstrap  = function () {
 		return el;
 	}; 
 	
-	
-	
+
 	
 	this.br = function () {
 		el = this.createElement('br', null);
@@ -798,22 +802,22 @@ var Bootstrap  = function () {
 		//<div class="carousel-item active">
 	    //  <img src="..." class="d-block w-100" alt="...">
 	    //</div>
-		var imgs = inputdef['images']; 
+		var imgs = inputdef['images'];
 		for (i=0; i < imgs.length; i++) {
-			
 			var crx = document.createElement('div');
-			crx.setAttribute('class', 'carousel-item');
+			if (i == 0) {
+	    		crx.setAttribute('class', 'carousel-item active');
+			} else {
+			    crx.setAttribute('class', 'carousel-item');
+			}
 			var imgf = imgs[i]; 
 			var img = document.createElement('img');
 			img.setAttribute('src', imgf);
-			img.setAttribute('class', 'd-block w-100');
-			
+
 			crx.appendChild(img);
 			divx_inner.appendChild(crx);
-			
 		}
-	    	
-		
+
 		return divx; 
 	}; 
 	

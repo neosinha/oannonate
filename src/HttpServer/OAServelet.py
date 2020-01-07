@@ -8,7 +8,7 @@ Created on Mar 31, 2019
 import cherrypy as HttpServer
 from pymongo import MongoClient
 import logging
-import json, magic
+import json, magic, hashlib
 from zipfile import ZipFile
 import argparse, datetime, time, os, sys, shutil
 import threading
@@ -88,11 +88,29 @@ class OAServelet(object):
         else:
             return "Parameter: \"theFile\" was not defined"
 
+    def md5sum(self, filename=None):
+        """
+        Generates MD5 checksum
+        The images uploade may be pretty big, so having logic to read the file
+        in chunks of 4096 bytes has been implemented
+        :param filename:
+        :return: hex digest of filename
+        """
+        hash_md5 = hashlib.md5()
+        with open(filename, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                hash_md5.update(chunk)
+
+        return hash_md5.hexdigest()
+
+
     def unpack(self, localfile=None):
         """
         Check and UNZP files
+        :param localfile: Local Zip file which needs to be unzipped
         :return:
         """
+        unpack = []
         if localfile:
             print("Unpacking LocalFile: {}".format(localfile))
             ftype = magic.from_file(localfile, mime=True)
@@ -125,11 +143,14 @@ class OAServelet(object):
                         if not '__MACOSX' in infoitem.filename and infoitem.compress_type != 0:
                             print("\t%s" % (infoitem))
                             print(infoitem.filename)
-
-                            fobj = {'filename': os.path.join('imagerepo', ddmmyy, infoitem.filename),
+                            filename = os.path.join('imagerepo', ddmmyy, infoitem.filename)
+                            phyloc = os.path.join(ucompressLocation, infoitem.filename)
+                            md5 = self.md5sum(phyloc)
+                            print("File: {}, MD5: {}".format(filename, md5))
+                            fobj = {'filename': filename,
                                     'class': classname,
                                     'size': infoitem.file_size,
-                                    'md5': '',
+                                    'md5': md5,
                                     'date': ddmmyy
                                     }
                             print("FileObj: {}".format(fobj))
@@ -151,7 +172,22 @@ class OAServelet(object):
                             'count': dbquery.count()})
         return json.dumps(classes)
 
+    @HttpServer.expose
+    def getclassmembers(self, classname=None):
+        """
+        @classname : Name of class
+        :return:
+        """
+        classname = str(classname).strip().replace('\"', '')
+        classmembers = list()
+        print("Querying for {}".format(classname))
+        # perform query over each class and create a list
+        dbquery = self.pics.find({'class': classname}, {'_id': 0})
+        classmembers = list(dbquery)
+        for cm in classmembers:
+            print(cm)
 
+        return json.dumps(classmembers)
 
     def epoch(self):
         """
@@ -160,13 +196,8 @@ class OAServelet(object):
         epc = int(time.time() * 1000)
         return epc
 
-
-
-
-
 # main code section   
 if __name__ == '__main__':
-    
     portnum = 9005
     www = os.path.join(os.getcwd(), '..', 'ui_www')
     ipadd = '127.0.0.1'

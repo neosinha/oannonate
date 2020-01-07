@@ -81,12 +81,32 @@
 }
 
 
+.classtable {
+    position: relative;
+    top: 25%;
+    width : 90%;
+    height: 30%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
 
 .mainlogo{
 	font-family: 'Major Mono Display', 'cursive';
 	font-size: 48px; 
 	position: relative; 
 	top: -15%;
+}
+
+.thumbnail {
+    display : block;
+	margin-left: auto;
+	margin-top: auto;
+    margin-right: auto;
+    margin-bottom: auto;
+
+    width: 50%;
+	max-width: 140px;
+    max-height: 140px;
 }
 
 .maintab {

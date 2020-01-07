@@ -78,6 +78,7 @@ Creates Update Structure scaffolding
 function uploadDatasets() {
     var divx = ui.createElement('div', 'uploaddataset');
     //make 2 columns
+    divx.appendChild(ui.br());
     var upcols =  ui.addRowCol('buttonrow', 2);
     divx.appendChild(upcols);
 
@@ -93,16 +94,19 @@ function createDataSetStructure() {
     img.setAttribute('src', 'img/folder.png');
     divx.appendChild(img);
     divx.appendChild(addButtonCol());
-
-
 }
 
 function loadDatasets() {
     var divx = ui.createElement('div', 'datasetload');
+    divx.setAttribute('class', 'classtable');
+    divx.appendChild(ui.br());
+
     var row1 = ui.addRowCol('datasetrow', 2);
     divx.appendChild(row1);
 
 
+    var row1 = ui.addRowCol('imagesetrow', 1);
+    divx.appendChild(row1);
 
     return divx;
 }
@@ -162,7 +166,6 @@ function fileUploadRow() {
 }
 
 function addButtonCol() {
-
     var upbtn = ui.createElement('a', 'upload');
     upbtn.setAttribute('class', 'btn btn-block btn-warning fileUpload');
     upbtn.setAttribute('onchange' , 'readFile(this);');
@@ -284,22 +287,62 @@ function updateImages(msg) {
     location.reload();
 }
 
+function requestclassmembers(classname) {
+    console.log('Class: '+ classname);
+    var urlx = 'http://' + server + '/getclassmembers?classname='+classname;
+	console.log('Sys: '+ urlx);
+    ajaxLoad(classMemberCallBack, urlx);
+}
+
+function classMemberCallBack(resp) {
+    //console.log('ClassMembers: '+ resp);
+    var resp = JSON.parse(resp);
+    var images = new Array();
+    var max = 3;
+    for (i=0; i < resp.length; i++) {
+        var memx = resp[i];
+        if (memx) {
+            //console.log(JSON.stringify(memx) );
+            //console.log('\t['+i+'] '+ memx['filename']);
+            var imel = ui.createElement('img', 'imgclass'+i);
+            imel.setAttribute('src', memx['filename']);
+            imel.setAttribute('class', 'thumbnail');
+            images.push(imel);
+
+            'imagesetrow'
+        }
+    }
+    var el = document.getElementById('datasetrow-col1');
+    for (i=0; i < 4; i++) {
+            el.appendChild(images[i]);
+    }
+}
+
 function imageClassCallBack(response) {
-    console.log(response);
+    //console.log(response);
     appglobals['classlist'] = JSON.parse(response);
     var tbldata = new Array();
     for (i=0; i < appglobals['classlist'].length; i++) {
         var clsnx = appglobals['classlist'][i];
-        console.log("Class: "+ JSON.stringify(clsnx)) ;
-        tbldata.push([clsnx['name'], clsnx['count'], 'A total of '+clsnx['count']+ 'images(s) belonging to class '+ clsnx['name']+ '. These were downloaded from Google.']);
+        console.log('Class Member: '+ clsnx['name']);
+        var btn = document.createElement('button');
+        btn.setAttribute('id', 'classmember'+i);
+        btn.innerText = 'Load';
+        btn.setAttribute('class', 'btn primary');
+        btn.setAttribute('onclick', 'requestclassmembers(\''+clsnx['name'] + '\'); ');
+
+        tbldata.push([clsnx['name'], clsnx['count'],
+         'A total of '+clsnx['count']+ ' images(s) belonging to class '+ clsnx['name']+ '. These were downloaded from Google.',
+         btn]);
     }
 
-    var hdr = ['Class Name', 'Count', 'Description'];
-    var tbl = ui.table('classtable', 'striped', hdr, tbldata);
-    var tblel = document.getElementById('datasetload');
+    var hdr = ['Class Name', 'Image Count', 'Description', ''];
+    var tbl = ui.table('classtable', 'table-bordered', hdr, tbldata);
+
+    var tblel = document.getElementById('datasetrow-col0');
+
     tblel.innerHTML = '';
     tblel.appendChild(tbl);
-
 
 }
 
